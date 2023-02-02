@@ -87,8 +87,22 @@ class MainActivity : AppCompatActivity() , OnClickListener {
     override fun onClick(view: View?) {
         myImageId = view!!.tag.toString().toInt()
         open.visibility = VISIBLE
-        scrollView.visibility = GONE
+
         animation = AnimationUtils.loadAnimation(applicationContext, R.anim.come)
+
+        open.startAnimation(animation)
+        animation.setAnimationListener(object : Animation.AnimationListener{
+            override fun onAnimationStart(p0: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                scrollView.visibility = GONE
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+        })
         update(0)
     }
 
