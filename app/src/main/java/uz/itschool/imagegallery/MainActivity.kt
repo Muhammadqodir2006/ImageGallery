@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.View.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ScrollView
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() , OnClickListener {
     private var images = arrayOf(R.drawable.img0, R.drawable.img1, R.drawable.img2, R.drawable.img3, R.drawable.img4, R.drawable.img5)
     private var myImageId : Int = 0
 
+    private lateinit var animation :Animation
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,17 +66,19 @@ class MainActivity : AppCompatActivity() , OnClickListener {
         img5.setOnClickListener(this)
 
         buttonBackArrow.setOnClickListener {
+            animation = AnimationUtils.loadAnimation(applicationContext, R.anim.goaway)
+            open.startAnimation(animation)
             open.visibility = GONE
             scrollView.visibility = VISIBLE
         }
 
         buttonForward.setOnClickListener {
             if (myImageId < images.size - 1) myImageId++
-            update()
+            update(1)
         }
         buttonBack.setOnClickListener {
             if (myImageId > 0) myImageId--
-            update()
+            update(-1)
         }
 
 
@@ -83,13 +88,21 @@ class MainActivity : AppCompatActivity() , OnClickListener {
         myImageId = view!!.tag.toString().toInt()
         open.visibility = VISIBLE
         scrollView.visibility = GONE
-        update()
+        animation = AnimationUtils.loadAnimation(applicationContext, R.anim.come)
+        update(0)
     }
 
-    private fun update(){
+    private fun update(a:Int){
         buttonBack.visibility = if (myImageId > 0) VISIBLE else GONE
         buttonForward.visibility = if (myImageId == images.size - 1) GONE else VISIBLE
 
+
         frontImage.setImageResource(images[myImageId])
+        if (a != 0){
+            animation = AnimationUtils.loadAnimation(applicationContext, R.anim.comeright)
+            if (a == -1) animation = AnimationUtils.loadAnimation(applicationContext, R.anim.comeleft)
+
+            frontImage.startAnimation(animation)
+        }
     }
 }
